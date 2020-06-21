@@ -9,7 +9,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class BikeModel extends EntityModel<Bike> {
-	private final ModelPart wheelB;
 	private final ModelPart pedals;
 	private final ModelPart frame;
 	private final ModelPart seat;
@@ -23,27 +22,26 @@ public class BikeModel extends EntityModel<Bike> {
 	private final ModelPart left;
 	private final ModelPart handleAttach;
 	private final ModelPart wheelF;
+	private final ModelPart rotate;
+	private final ModelPart rotate2;
+	private final ModelPart rotate3;
+	private final ModelPart spoke;
+	private final ModelPart spoke2;
+	private final ModelPart spoke3;
+	private final ModelPart spoke4;
+	private final ModelPart wheelB;
+	private final ModelPart rotate4;
+	private final ModelPart rotate5;
+	private final ModelPart rotate6;
+	private final ModelPart spoke5;
+	private final ModelPart spoke6;
+	private final ModelPart spoke7;
+	private final ModelPart spoke8;
 
 	public BikeModel() {
 		textureWidth = 32;
 		textureHeight = 32;
-
-		wheelB = new ModelPart(this);
-		wheelB.setPivot(0.0F, 19.5F, 9.5F);
-		wheelB.setTextureOffset(6, 14).addCuboid(-0.5F, 2.5F, 1.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelB.setTextureOffset(6, 14).addCuboid(-0.5F, 2.5F, -2.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelB.setTextureOffset(1, 18).addCuboid(-0.5F, 3.5F, -1.5F, 1.0F, 1.0F, 3.0F, 0.0F, false);
-		wheelB.setTextureOffset(1, 13).addCuboid(-0.5F, -4.5F, -1.5F, 1.0F, 1.0F, 3.0F, 0.0F, false);
-		wheelB.setTextureOffset(6, 12).addCuboid(-0.5F, -3.5F, -2.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelB.setTextureOffset(6, 12).addCuboid(-0.5F, -3.5F, 1.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelB.setTextureOffset(6, 14).addCuboid(-0.5F, 1.5F, -3.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelB.setTextureOffset(6, 12).addCuboid(-0.5F, -2.5F, -3.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelB.setTextureOffset(0, 12).addCuboid(-0.5F, -1.5F, -4.5F, 1.0F, 3.0F, 1.0F, 0.0F, false);
-		wheelB.setTextureOffset(6, 14).addCuboid(-0.5F, 1.5F, 2.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelB.setTextureOffset(0, 12).addCuboid(-0.5F, -1.5F, 3.5F, 1.0F, 3.0F, 1.0F, 0.0F, false);
-		wheelB.setTextureOffset(6, 12).addCuboid(-0.5F, -2.5F, 2.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelB.setTextureOffset(0, 2).addCuboid(0.0F, -2.5F, -2.5F, 0.0F, 5.0F, 5.0F, 0.0F, false);
-
+		
 		pedals = new ModelPart(this);
 		pedals.setPivot(0.0F, 19.5F, 2.0F);
 		pedals.setTextureOffset(12, 27).addCuboid(0.5F, -0.5F, 0.5F, 2.0F, 1.0F, 2.0F, 0.0F, false);
@@ -118,19 +116,119 @@ public class BikeModel extends EntityModel<Bike> {
 
 		wheelF = new ModelPart(this);
 		wheelF.setPivot(0.0F, 19.5F, -8.5F);
-		wheelF.setTextureOffset(6, 14).addCuboid(-0.5F, 2.5F, 1.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelF.setTextureOffset(6, 14).addCuboid(-0.5F, 2.5F, -2.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelF.setTextureOffset(1, 18).addCuboid(-0.5F, 3.5F, -1.5F, 1.0F, 1.0F, 3.0F, 0.0F, false);
-		wheelF.setTextureOffset(1, 13).addCuboid(-0.5F, -4.5F, -1.5F, 1.0F, 1.0F, 3.0F, 0.0F, false);
-		wheelF.setTextureOffset(6, 12).addCuboid(-0.5F, -3.5F, -2.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelF.setTextureOffset(6, 12).addCuboid(-0.5F, -3.5F, 1.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelF.setTextureOffset(6, 14).addCuboid(-0.5F, 1.5F, -3.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelF.setTextureOffset(6, 12).addCuboid(-0.5F, -2.5F, -3.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelF.setTextureOffset(0, 12).addCuboid(-0.5F, -1.5F, -4.5F, 1.0F, 3.0F, 1.0F, 0.0F, false);
-		wheelF.setTextureOffset(6, 14).addCuboid(-0.5F, 1.5F, 2.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelF.setTextureOffset(0, 12).addCuboid(-0.5F, -1.5F, 3.5F, 1.0F, 3.0F, 1.0F, 0.0F, false);
-		wheelF.setTextureOffset(6, 12).addCuboid(-0.5F, -2.5F, 2.5F, 1.0F, 1.0F, 1.0F, 0.0F, false);
-		wheelF.setTextureOffset(0, 2).addCuboid(0.0F, -2.5F, -2.5F, 0.0F, 5.0F, 5.0F, 0.0F, false);
+		wheelF.setTextureOffset(2, 19).addCuboid(-0.5F, 3.5F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		wheelF.setTextureOffset(1, 13).addCuboid(-0.5F, -4.5F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		wheelF.setTextureOffset(0, 12).addCuboid(-0.5F, -1.25F, -4.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+		wheelF.setTextureOffset(0, 12).addCuboid(-0.5F, -1.0F, 3.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+
+		rotate = new ModelPart(this);
+		rotate.setPivot(0.0F, -0.0625F, 0.0F);
+		wheelF.addChild(rotate);
+		setRotationAngle(rotate, 0.3927F, 0.0F, 0.0F);
+		rotate.setTextureOffset(0, 12).addCuboid(-0.5F, -0.9375F, 3.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+		rotate.setTextureOffset(2, 19).addCuboid(-0.5F, 3.5625F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		rotate.setTextureOffset(1, 13).addCuboid(-0.5F, -4.4375F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		rotate.setTextureOffset(0, 12).addCuboid(-0.5F, -1.1875F, -4.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+
+		rotate2 = new ModelPart(this);
+		rotate2.setPivot(0.0F, -0.0625F, 0.0F);
+		wheelF.addChild(rotate2);
+		setRotationAngle(rotate2, 0.7854F, 0.0F, 0.0F);
+		rotate2.setTextureOffset(0, 12).addCuboid(-0.5F, -0.9375F, 3.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+		rotate2.setTextureOffset(2, 19).addCuboid(-0.5F, 3.5625F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		rotate2.setTextureOffset(1, 13).addCuboid(-0.5F, -4.4375F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		rotate2.setTextureOffset(0, 12).addCuboid(-0.5F, -1.1875F, -4.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+
+		rotate3 = new ModelPart(this);
+		rotate3.setPivot(0.0F, -0.0625F, 0.0F);
+		wheelF.addChild(rotate3);
+		setRotationAngle(rotate3, 1.1781F, 0.0F, 0.0F);
+		rotate3.setTextureOffset(0, 12).addCuboid(-0.5F, -0.9375F, 3.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+		rotate3.setTextureOffset(2, 19).addCuboid(-0.5F, 3.5625F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		rotate3.setTextureOffset(1, 13).addCuboid(-0.5F, -4.4375F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		rotate3.setTextureOffset(0, 12).addCuboid(-0.5F, -1.1875F, -4.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+
+		spoke = new ModelPart(this);
+		spoke.setPivot(0.0F, 0.0F, 0.0F);
+		wheelF.addChild(spoke);
+		setRotationAngle(spoke, -0.7854F, 0.0F, 0.0F);
+		spoke.setTextureOffset(23, 14).addCuboid(0.0F, -3.5F, -0.5F, 0.0F, 7.0F, 1.0F, 0.0F, false);
+
+		spoke2 = new ModelPart(this);
+		spoke2.setPivot(0.0F, 0.0F, 0.0F);
+		wheelF.addChild(spoke2);
+		setRotationAngle(spoke2, 0.7854F, 0.0F, 0.0F);
+		spoke2.setTextureOffset(23, 14).addCuboid(0.0F, -3.5F, -0.5F, 0.0F, 7.0F, 1.0F, 0.0F, false);
+
+		spoke3 = new ModelPart(this);
+		spoke3.setPivot(0.0F, 0.0F, 0.0F);
+		wheelF.addChild(spoke3);
+		setRotationAngle(spoke3, 1.5708F, 0.0F, 0.0F);
+		spoke3.setTextureOffset(23, 14).addCuboid(0.0F, -3.5F, -0.5F, 0.0F, 7.0F, 1.0F, 0.0F, false);
+
+		spoke4 = new ModelPart(this);
+		spoke4.setPivot(0.0F, 0.0F, 0.0F);
+		wheelF.addChild(spoke4);
+		setRotationAngle(spoke4, 3.1416F, 0.0F, 0.0F);
+		spoke4.setTextureOffset(23, 14).addCuboid(0.0F, -3.5F, -0.5F, 0.0F, 7.0F, 1.0F, 0.0F, false);
+
+		wheelB = new ModelPart(this);
+		wheelB.setPivot(0.0F, 19.5F, 9.5F);
+		wheelB.setTextureOffset(2, 19).addCuboid(-0.5F, 3.5F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		wheelB.setTextureOffset(1, 13).addCuboid(-0.5F, -4.5F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		wheelB.setTextureOffset(0, 12).addCuboid(-0.5F, -1.25F, -4.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+		wheelB.setTextureOffset(0, 12).addCuboid(-0.5F, -1.0F, 3.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+
+		rotate4 = new ModelPart(this);
+		rotate4.setPivot(0.0F, -0.0625F, 0.0F);
+		wheelB.addChild(rotate4);
+		setRotationAngle(rotate4, 0.3927F, 0.0F, 0.0F);
+		rotate4.setTextureOffset(0, 12).addCuboid(-0.5F, -0.9375F, 3.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+		rotate4.setTextureOffset(2, 19).addCuboid(-0.5F, 3.5625F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		rotate4.setTextureOffset(1, 13).addCuboid(-0.5F, -4.4375F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		rotate4.setTextureOffset(0, 12).addCuboid(-0.5F, -1.1875F, -4.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+
+		rotate5 = new ModelPart(this);
+		rotate5.setPivot(0.0F, -0.0625F, 0.0F);
+		wheelB.addChild(rotate5);
+		setRotationAngle(rotate5, 0.7854F, 0.0F, 0.0F);
+		rotate5.setTextureOffset(0, 12).addCuboid(-0.5F, -0.9375F, 3.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+		rotate5.setTextureOffset(2, 19).addCuboid(-0.5F, 3.5625F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		rotate5.setTextureOffset(1, 13).addCuboid(-0.5F, -4.4375F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		rotate5.setTextureOffset(0, 12).addCuboid(-0.5F, -1.1875F, -4.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+
+		rotate6 = new ModelPart(this);
+		rotate6.setPivot(0.0F, -0.0625F, 0.0F);
+		wheelB.addChild(rotate6);
+		setRotationAngle(rotate6, 1.1781F, 0.0F, 0.0F);
+		rotate6.setTextureOffset(0, 12).addCuboid(-0.5F, -0.9375F, 3.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+		rotate6.setTextureOffset(2, 19).addCuboid(-0.5F, 3.5625F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		rotate6.setTextureOffset(1, 13).addCuboid(-0.5F, -4.4375F, -1.0F, 1.0F, 1.0F, 2.0F, 0.0F, false);
+		rotate6.setTextureOffset(0, 12).addCuboid(-0.5F, -1.1875F, -4.5F, 1.0F, 2.0F, 1.0F, 0.0F, false);
+
+		spoke5 = new ModelPart(this);
+		spoke5.setPivot(0.0F, 0.0F, 0.0F);
+		wheelB.addChild(spoke5);
+		setRotationAngle(spoke5, -0.7854F, 0.0F, 0.0F);
+		spoke5.setTextureOffset(23, 14).addCuboid(0.0F, -3.5F, -0.5F, 0.0F, 7.0F, 1.0F, 0.0F, false);
+
+		spoke6 = new ModelPart(this);
+		spoke6.setPivot(0.0F, 0.0F, 0.0F);
+		wheelB.addChild(spoke6);
+		setRotationAngle(spoke6, 0.7854F, 0.0F, 0.0F);
+		spoke6.setTextureOffset(23, 14).addCuboid(0.0F, -3.5F, -0.5F, 0.0F, 7.0F, 1.0F, 0.0F, false);
+
+		spoke7 = new ModelPart(this);
+		spoke7.setPivot(0.0F, 0.0F, 0.0F);
+		wheelB.addChild(spoke7);
+		setRotationAngle(spoke7, 1.5708F, 0.0F, 0.0F);
+		spoke7.setTextureOffset(23, 14).addCuboid(0.0F, -3.5F, -0.5F, 0.0F, 7.0F, 1.0F, 0.0F, false);
+
+		spoke8 = new ModelPart(this);
+		spoke8.setPivot(0.0F, 0.0F, 0.0F);
+		wheelB.addChild(spoke8);
+		setRotationAngle(spoke8, 3.1416F, 0.0F, 0.0F);
+		spoke8.setTextureOffset(23, 14).addCuboid(0.0F, -3.5F, -0.5F, 0.0F, 7.0F, 1.0F, 0.0F, false);
 	}
 
 	@Override
