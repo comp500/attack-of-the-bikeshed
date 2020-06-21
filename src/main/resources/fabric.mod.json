@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "bikeshed",
+	"version": "${version}",
+
+	"name": "Bike[shed]",
+	"description": "Bikes. With an accompanying shed, of course.",
+	"authors": [
+		"comp500"
+	],
+	"contact": {
+		"homepage": "yes",
+		"sources": "https://github.com/comp500/Bikeshed"
+	},
+
+	"license": "LGPL-3.0-or-later",
+	"icon": "assets/bikeshed/icon.png",
+
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"link.infra.bikeshed.BikeshedMain"
+		],
+		"client": [
+			"link.infra.bikeshed.client.BikeshedClient"
+		]
+	},
+	"mixins": [
+		"bikeshed.mixins.json"
+	],
+
+	"depends": {
+		"fabricloader": ">=0.7.4",
+		"fabric": "*",
+		"minecraft": "1.16.x"
+	}
+}
