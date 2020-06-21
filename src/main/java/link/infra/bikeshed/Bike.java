@@ -109,9 +109,9 @@ public class Bike extends LivingEntity {
 	public void updatePassengerPosition(Entity passenger) {
 		super.updatePassengerPosition(passenger);
 		if (this.hasPassenger(passenger)) {
-			// Translate 0.6 backwards, accounting for yaw
+			// Translate 0.45 backwards, accounting for yaw
 			double height = getY() + getMountedHeightOffset() + passenger.getHeightOffset();
-			Vec3d backwardsOffset = new Vec3d(0, 0, -0.6).rotateY((float) Math.toRadians(-bodyYaw));
+			Vec3d backwardsOffset = new Vec3d(0, 0, -0.45).rotateY((float) Math.toRadians(-bodyYaw));
 			passenger.updatePosition(getX() + backwardsOffset.getX(), height, getZ() + backwardsOffset.getZ());
 		}
 	}
