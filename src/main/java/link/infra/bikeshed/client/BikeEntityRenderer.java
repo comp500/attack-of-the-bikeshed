@@ -29,7 +29,7 @@ public class BikeEntityRenderer extends LivingEntityRenderer<Bike, BikeModel> {
 	@Override
 	protected void setupTransforms(Bike entity, MatrixStack matrices, float animationProgress, float bodyYaw, float tickDelta) {
 		super.setupTransforms(entity, matrices, animationProgress, bodyYaw, tickDelta);
-		float distance = entity.getLeanBlockDistance(tickDelta);
+		//float distance = entity.getLeanBlockDistance(tickDelta);
 		//if (distance > 0.0F) {
 //			// Rotate around the back wheel
 //			Vec3d rotationPointOffset = Bike.BACK_WHEEL_OFFSET.rotateY((float) Math.toRadians(-entity.bodyYaw));
