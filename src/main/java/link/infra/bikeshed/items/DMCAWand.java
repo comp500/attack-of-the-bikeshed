@@ -74,11 +74,4 @@ public class DMCAWand extends Item {
 	public ActionResult useOnBlock(ItemUsageContext context) {
 		return ActionResult.FAIL;
 	}
-
-	@Override
-	public UseAction getUseAction(ItemStack stack) {
-		return UseAction.SPEAR;
-	}
-
-	// TODO: add action
 }

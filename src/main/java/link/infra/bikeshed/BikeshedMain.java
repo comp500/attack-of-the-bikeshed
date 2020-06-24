@@ -2,6 +2,7 @@ package link.infra.bikeshed;
 
 import link.infra.bikeshed.blocks.Bikerack;
 import link.infra.bikeshed.entities.Bike;
+import link.infra.bikeshed.entities.DMCANotice;
 import link.infra.bikeshed.items.DMCAWand;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -28,12 +29,18 @@ public class BikeshedMain implements ModInitializer {
 			// TODO: figure out velocity syncing issues
 			.trackable(30, 3, true).build());
 
+	public static final EntityType<DMCANotice> DMCA_NOTICE = Registry.register(Registry.ENTITY_TYPE,
+		new Identifier("bikeshed", "dmca_notice"),
+		FabricEntityTypeBuilder.create(SpawnGroup.MISC, DMCANotice::new)
+			.dimensions(EntityDimensions.fixed(1.5f, 1.7f)).build());
+
 	public static final Item DMCA_WAND = new DMCAWand(new Item.Settings().group(ItemGroup.TRANSPORTATION));
 	public static final Block BIKE_RACK = new Bikerack(FabricBlockSettings.of(Material.METAL).hardness(4.0f));
 
 	@Override
 	public void onInitialize() {
 		FabricDefaultAttributeRegistry.register(BIKE, Bike.createBikeAttributes());
+		FabricDefaultAttributeRegistry.register(DMCA_NOTICE, DMCANotice.createLivingAttributes());
 
 		Registry.register(Registry.ITEM, new Identifier("bikeshed", "dmca_wand"), DMCA_WAND);
 		Registry.register(Registry.BLOCK, new Identifier("bikeshed", "bikerack"), BIKE_RACK);

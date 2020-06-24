@@ -22,7 +22,7 @@
 			"link.infra.bikeshed.BikeshedMain"
 		],
 		"client": [
-			"link.infra.bikeshed.client.BikeshedClient"
+			"link.infra.bikeshed.BikeshedClient"
 		]
 	},
 	"mixins": [
