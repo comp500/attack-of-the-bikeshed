@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"facing=north": { "model": "bikeshed:block/bikerack" },
+		"facing=east":  { "model": "bikeshed:block/bikerack", "y": 90 },
+		"facing=south": { "model": "bikeshed:block/bikerack", "y": 180 },
+		"facing=west":  { "model": "bikeshed:block/bikerack", "y": 270 }
+	}
+}

@@ -43,18 +43,18 @@ public class BikeEntityRenderer extends LivingEntityRenderer<Bike, BikeModel> {
 //			// TODO: disable to test rot point?
 //			matrices.translate(-rotationPointOffset.getX(), -rotationPointOffset.getY(), -rotationPointOffset.getZ());
 
-			matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(MathHelper.lerp(tickDelta, entity.prevBodyYaw, entity.bodyYaw)));
-			// Rotate around the back wheel
-			matrices.translate(Bike.BACK_WHEEL_OFFSET.getX(), Bike.BACK_WHEEL_OFFSET.getY(), Bike.BACK_WHEEL_OFFSET.getZ());
-			// TODO: clamp?
-			//matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(animationProgress % 360f));
-
-			matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(animationProgress % 360f));
-
-			//matrices.multiply(Vector3f.POSITIVE_X.getRadialQuaternion((float) Math.atan(1.0F / distance)));
-
-			matrices.translate(-Bike.BACK_WHEEL_OFFSET.getX(), -Bike.BACK_WHEEL_OFFSET.getY(), -Bike.BACK_WHEEL_OFFSET.getZ());
-			matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-MathHelper.lerp(tickDelta, entity.prevBodyYaw, entity.bodyYaw)));
+//			matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(MathHelper.lerp(tickDelta, entity.prevBodyYaw, entity.bodyYaw)));
+//			// Rotate around the back wheel
+//			matrices.translate(Bike.BACK_WHEEL_OFFSET.getX(), Bike.BACK_WHEEL_OFFSET.getY(), Bike.BACK_WHEEL_OFFSET.getZ());
+//			// TODO: clamp?
+//			//matrices.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(animationProgress % 360f));
+//
+//			matrices.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(animationProgress % 360f));
+//
+//			//matrices.multiply(Vector3f.POSITIVE_X.getRadialQuaternion((float) Math.atan(1.0F / distance)));
+//
+//			matrices.translate(-Bike.BACK_WHEEL_OFFSET.getX(), -Bike.BACK_WHEEL_OFFSET.getY(), -Bike.BACK_WHEEL_OFFSET.getZ());
+//			matrices.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(-MathHelper.lerp(tickDelta, entity.prevBodyYaw, entity.bodyYaw)));
 		//}
 	}
 }

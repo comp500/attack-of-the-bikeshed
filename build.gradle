@@ -12,6 +12,7 @@ group = project.maven_group
 
 repositories {
 	maven { url = "https://jitpack.io" }
+	maven {url "https://maven.jamieswhiteshirt.com/libs-release/"}
 }
 
 dependencies {
@@ -29,6 +30,8 @@ dependencies {
 	modRuntime ("com.github.SuperCoder7979:databreaker:67716e92f6") {
 		exclude module : "fabric-loader"
 	}
+	modImplementation "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
+	include "com.jamieswhiteshirt:reach-entity-attributes:${project.reach_entity_attributes_version}"
 }
 
 processResources {
