@@ -50,6 +50,8 @@ public class Bike extends LivingEntity {
 		return Arm.LEFT;
 	}
 
+	// TODO: some logic to GC unused bikes?
+
 	@Override
 	public ActionResult interact(PlayerEntity player, Hand hand) {
 		if (isAlive()) {
@@ -68,9 +70,6 @@ public class Bike extends LivingEntity {
 				player.yaw = yaw;
 				player.pitch = pitch;
 				player.startRiding(this);
-				// TODO: some logic to GC unused bikes?
-				// TODO: some logic to spawn bikes? or recipe?
-				// TODO: check what interactions this blocks - like name tags!
 			}
 			return ActionResult.success(world.isClient());
 		}
