@@ -11,6 +11,7 @@ import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -56,4 +57,16 @@ public class Bikerack extends Block {
 	public BlockState getPlacementState(ItemPlacementContext ctx) {
 		return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
 	}
+
+	public Vec3d getBikeOffset(BlockState state) {
+		Direction dir = state.get(FACING);
+		return new Vec3d(-dir.getOffsetX(), -dir.getOffsetY(), -dir.getOffsetZ());
+	}
+
+	public float getBikeYaw(BlockState state) {
+		Direction dir = state.get(FACING);
+		return dir.asRotation();
+	}
+
+	// TODO: Add right click action to spawn bike
 }

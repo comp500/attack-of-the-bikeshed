@@ -1,24 +1,20 @@
 package link.infra.bikeshed.entities;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
+import link.infra.bikeshed.blocks.Bikerack;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RayTraceContext;
 import net.minecraft.world.World;
 
 import java.util.Collections;
@@ -157,6 +153,7 @@ public class Bike extends LivingEntity {
 		//this.lastLeanBlockDistance = this.leanBlockDistance;
 
 		//Vec3d backWheelPos = getPos().add(BACK_WHEEL_OFFSET.rotateY((float) Math.toRadians(-bodyYaw)));
+		// note: We can actually use world.getBlockCollisions(entity, targetBox).allMatch(VoxelShape::isEmpty);
 
 //		Vec3d searchPos = null;
 //		for (double i = 0.5d; i < blockCheckDistance + 0.5d; i++) {
@@ -195,4 +192,59 @@ public class Bike extends LivingEntity {
 //	public float getLeanBlockDistance(float tickDelta) {
 //		return MathHelper.lerp(tickDelta, lastLeanBlockDistance, leanBlockDistance);
 //	}
+
+
+	@Override
+	public Vec3d updatePassengerForDismount(LivingEntity passenger) {
+		Direction dir = getMovementDirection();
+		if (dir.getAxis() == Direction.Axis.Y) {
+			// If moving vertically, delegate to super
+			Vec3d pos = super.updatePassengerForDismount(passenger);
+			snapToBikeRack();
+			return pos;
+		} else {
+			int[][] offsets = Dismounting.getDismountOffsets(dir);
+			BlockPos currBlockPos = getBlockPos();
+			BlockPos.Mutable targetBlockPos = new BlockPos.Mutable();
+
+			for (EntityPose pose : passenger.getPoses()) {
+				Box passengerBounds = passenger.getBoundingBox(pose);
+				for (int[] offset : offsets) {
+					targetBlockPos.set(currBlockPos.getX() + offset[0], currBlockPos.getY(), currBlockPos.getZ() + offset[1]);
+					double height = world.getCollisionHeightAt(targetBlockPos);
+					if (Dismounting.canDismountInBlock(height)) {
+						Vec3d newPos = Vec3d.ofCenter(targetBlockPos, height);
+						if (Dismounting.canPlaceEntityAt(world, passenger, passengerBounds.offset(newPos))) {
+							passenger.setPose(pose);
+							snapToBikeRack();
+							return newPos;
+						}
+					}
+				}
+			}
+		}
+		Vec3d pos = super.updatePassengerForDismount(passenger);
+		snapToBikeRack();
+		return pos;
+	}
+
+	private void snapToBikeRack() {
+		// Check current block pos
+		BlockState state = getBlockState();
+		BlockPos pos = getBlockPos();
+		if (!(state.getBlock() instanceof Bikerack)) {
+			// Check block pos in front
+			pos = getBlockPos().offset(getMovementDirection());
+			state = world.getBlockState(pos);
+		}
+
+		if (state.getBlock() instanceof Bikerack) {
+			Bikerack bikerack = (Bikerack) state.getBlock();
+			Vec3d vec = Vec3d.of(pos).add(0.5, 0, 0.5).add(bikerack.getBikeOffset(state));
+			float yaw = bikerack.getBikeYaw(state);
+			refreshPositionAndAngles(vec.getX(), vec.getY(), vec.getZ(), yaw, 0);
+			setHeadYaw(yaw);
+			setYaw(yaw);
+		}
+	}
 }
