@@ -1,11 +1,10 @@
-package link.infra.bikeshed.client;
+package link.infra.bikeshed.entities;
 
-import link.infra.bikeshed.Bike;
+import link.infra.bikeshed.entities.Bike;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class BikeModel extends EntityModel<Bike> {

@@ -1,6 +1,7 @@
 package link.infra.bikeshed;
 
 import link.infra.bikeshed.blocks.Bikerack;
+import link.infra.bikeshed.entities.Bike;
 import link.infra.bikeshed.items.DMCAWand;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;

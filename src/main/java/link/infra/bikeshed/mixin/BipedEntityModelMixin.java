@@ -1,7 +1,6 @@
 package link.infra.bikeshed.mixin;
 
-import link.infra.bikeshed.Bike;
-import net.minecraft.client.gui.screen.TitleScreen;
+import link.infra.bikeshed.entities.Bike;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.AnimalModel;
 import net.minecraft.client.render.entity.model.BipedEntityModel;

@@ -1,4 +1,4 @@
-package link.infra.bikeshed;
+package link.infra.bikeshed.entities;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -30,7 +30,7 @@ public class Bike extends LivingEntity {
 	//private float lastLeanBlockDistance = 0F;
 	//public static final Vec3d BACK_WHEEL_OFFSET = new Vec3d(0, 0.37, -0.75);
 
-	protected Bike(EntityType<? extends LivingEntity> entityType, World world) {
+	public Bike(EntityType<? extends LivingEntity> entityType, World world) {
 		super(entityType, world);
 		this.stepHeight = 1.0F;
 	}

@@ -1,14 +1,9 @@
-package link.infra.bikeshed.client;
+package link.infra.bikeshed.entities;
 
-import link.infra.bikeshed.Bike;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3d;
 
 public class BikeEntityRenderer extends LivingEntityRenderer<Bike, BikeModel> {
 	public BikeEntityRenderer(EntityRenderDispatcher dispatcher) {

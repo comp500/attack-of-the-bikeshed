@@ -1,6 +1,7 @@
-package link.infra.bikeshed.client;
+package link.infra.bikeshed;
 
 import link.infra.bikeshed.BikeshedMain;
+import link.infra.bikeshed.entities.BikeEntityRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
