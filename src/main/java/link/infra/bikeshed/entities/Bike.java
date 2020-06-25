@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -26,6 +27,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.Collections;
+import java.util.Random;
 
 @SuppressWarnings("EntityConstructor") // Stupid mcdev
 public class Bike extends LivingEntity {
@@ -120,9 +122,39 @@ public class Bike extends LivingEntity {
 	}
 
 	private boolean canBeHeld(Item item) {
-		Identifier ident = Registry.ITEM.getId(item);
-		// TODO: change this, do action when held
-		return ident.toString().contains("bone");
+		String ident = Registry.ITEM.getId(item).toString();
+		return ident.contains("bonecheese") || ident.contains("bone_cheese") || ident.contains("bucket") || ident.contains("tater");
+	}
+
+	private String selectRandomOf(String... choices) {
+		Random rand = new Random();
+		return choices[rand.nextInt(choices.length)];
+	}
+
+	private Text getNameFromItem() {
+		String ident = Registry.ITEM.getId(heldItem.getItem()).toString();
+
+		if (ident.contains("bonecheese") || ident.contains("bone_cheese")) {
+			return new LiteralText(selectRandomOf("b o n e", "bone cheese, with ease"));
+		} else if (ident.contains("water_bucket")) {
+			return new LiteralText(selectRandomOf("1000mb", "9223372036854775807/9223372036854775807", "1.0F", "3/3 bottles"));
+		} else if (ident.contains("lava_bucket")) {
+			return new LiteralText("Heat: 1000 degrees Kelvinheit");
+		} else if (ident.contains("milk_bucket")) {
+			return new LiteralText("milk blocks when??");
+		} else if (ident.contains("pufferfish_bucket")) {
+			return new LiteralText("helo i am puf fish");
+		} else if (ident.contains("salmon_bucket")) {
+			return new LiteralText("NBT fluids haha yes");
+		} else if (ident.contains("bucket")) {
+			return new LiteralText("fluid api go brrr");
+		}
+		return null;
+	}
+
+	private void setNameFromItem() {
+		setCustomName(getNameFromItem());
+		setCustomNameVisible(true);
 	}
 
 	@Override
@@ -150,18 +182,25 @@ public class Bike extends LivingEntity {
 						return ActionResult.success(false);
 					} else if (canBeHeld(itemStack.getItem()) && heldItem.isEmpty()) {
 						// TODO: consume item?
-						heldItem = itemStack;
+						heldItem = itemStack.copy();
+						heldItem.setCount(1);
+						if (!customNameDirty) {
+							setNameFromItem();
+						}
 						return ActionResult.success(false);
 					}
 				}
 				// If sneaking, give item to player
 				if (player.isSneaking()) {
 					if (!heldItem.isEmpty()) {
-						// TODO: does this work??
-						if (!player.giveItemStack(heldItem)) {
-							player.dropItem(heldItem, false);
-						}
+						ItemEntity itemEntity = new ItemEntity(world, getX(), getY(), getZ(), heldItem);
+						itemEntity.setPickupDelay(0);
+						world.spawnEntity(itemEntity);
 						heldItem = ItemStack.EMPTY;
+						if (!customNameDirty) {
+							setCustomName(null);
+							setCustomNameVisible(false);
+						}
 						return ActionResult.success(false);
 					}
 					return ActionResult.PASS;
