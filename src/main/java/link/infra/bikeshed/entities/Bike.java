@@ -8,13 +8,17 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.Collections;
@@ -22,6 +26,7 @@ import java.util.Collections;
 @SuppressWarnings("EntityConstructor") // Stupid mcdev
 public class Bike extends LivingEntity {
 	public float wheelPosition = 0;
+	public int lastUsedAge = 0;
 	//private float leanBlockDistance = 0F;
 	//private float lastLeanBlockDistance = 0F;
 	//public static final Vec3d BACK_WHEEL_OFFSET = new Vec3d(0, 0.37, -0.75);
@@ -50,11 +55,35 @@ public class Bike extends LivingEntity {
 		return Arm.LEFT;
 	}
 
+	@Override
+	public void readCustomDataFromTag(CompoundTag tag) {
+		lastUsedAge = tag.getInt("LastUsedAge");
+	}
+
+	@Override
+	public void writeCustomDataToTag(CompoundTag tag) {
+		tag.putInt("LastUsedAge", lastUsedAge);
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+		if (!world.isClient) {
+			if (age - lastUsedAge > ((20 * (5 * 60)) - (20 * 30))) {
+				setCustomName(new TranslatableText("entity.bikeshed.bike.crab"));
+			}
+			if (age - lastUsedAge > (20 * (5 * 60))) {
+				kill();
+			}
+		}
+	}
+
 	// TODO: some logic to GC unused bikes?
 
 	@Override
 	public ActionResult interact(PlayerEntity player, Hand hand) {
 		if (isAlive()) {
+			lastUsedAge = age;
 			if (hasPassengers()) {
 				return ActionResult.PASS;
 			}
@@ -67,9 +96,14 @@ public class Bike extends LivingEntity {
 				}
 			}
 			if (!world.isClient()) {
-				player.yaw = yaw;
-				player.pitch = pitch;
-				player.startRiding(this);
+				if (Registry.ITEM.getId(itemStack.getItem()).equals(new Identifier("minecraft", "iron_ingot"))) {
+					// TODO: consume item?
+					heal(2f);
+				} else {
+					player.yaw = yaw;
+					player.pitch = pitch;
+					player.startRiding(this);
+				}
 			}
 			return ActionResult.success(world.isClient());
 		}
@@ -84,6 +118,7 @@ public class Bike extends LivingEntity {
 	public void travel(Vec3d movementInput) {
 		if (isAlive()) {
 			if (hasPassengers() && getPrimaryPassenger() instanceof LivingEntity) {
+				lastUsedAge = age;
 				// Update movement and rotation to that of the primary passenger
 				LivingEntity ent = (LivingEntity) getPrimaryPassenger();
 				yaw = ent.yaw;
@@ -127,6 +162,7 @@ public class Bike extends LivingEntity {
 	public void updatePassengerPosition(Entity passenger) {
 		super.updatePassengerPosition(passenger);
 		if (this.hasPassenger(passenger)) {
+			lastUsedAge = age;
 			// Translate 0.45 backwards, accounting for yaw
 			double height = getY() + getMountedHeightOffset() + passenger.getHeightOffset();
 			Vec3d backwardsOffset = new Vec3d(0, 0, -0.45).rotateY((float) Math.toRadians(-bodyYaw));
@@ -195,6 +231,7 @@ public class Bike extends LivingEntity {
 
 	@Override
 	public Vec3d updatePassengerForDismount(LivingEntity passenger) {
+		lastUsedAge = age;
 		Direction dir = getMovementDirection();
 		if (dir.getAxis() == Direction.Axis.Y) {
 			// If moving vertically, delegate to super

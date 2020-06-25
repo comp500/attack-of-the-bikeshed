@@ -1,5 +1,8 @@
 {
 	"item.bikeshed.dmca_wand": "DMCA Wand",
 	"item.bikeshed.dmca_wand.tooltip": "Great for impersonating Mojang devs!",
-	"block.bikeshed.bikerack": "Bike Rack"
+	"block.bikeshed.bikerack": "Bike Rack",
+	"entity.bikeshed.bike": "Bike",
+	"entity.bikeshed.bike.crab": "crab crab crab",
+	"entity.bikeshed.dmca_notice": "DMCA Notice"
 }
