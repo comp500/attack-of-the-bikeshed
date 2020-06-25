@@ -1,7 +1,10 @@
 package link.infra.bikeshed.entities;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
+import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
@@ -19,6 +22,15 @@ public class BikeEntityRenderer extends LivingEntityRenderer<Bike, BikeModel> {
 	protected boolean hasLabel(Bike ent) {
 		// For some reason, this logic isn't overridden in LivingEntityRenderer, only in MobEntityRenderer
 		return super.hasLabel(ent) && (ent.shouldRenderName() || ent.hasCustomName() && ent == dispatcher.targetedEntity);
+	}
+
+	@Override
+	public void render(Bike bike, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
+		super.render(bike, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
+		if (!bike.heldItem.isEmpty()) {
+			// TODO: check transforms
+			MinecraftClient.getInstance().getHeldItemRenderer().renderItem(bike, bike.heldItem, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, true, matrixStack, vertexConsumerProvider, light);
+		}
 	}
 
 	@Override

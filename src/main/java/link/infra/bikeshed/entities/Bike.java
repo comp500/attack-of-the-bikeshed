@@ -7,8 +7,12 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
@@ -27,6 +31,7 @@ import java.util.Collections;
 public class Bike extends LivingEntity {
 	public float wheelPosition = 0;
 	public int lastUsedAge = 0;
+	public ItemStack heldItem = ItemStack.EMPTY;
 	//private float leanBlockDistance = 0F;
 	//private float lastLeanBlockDistance = 0F;
 	//public static final Vec3d BACK_WHEEL_OFFSET = new Vec3d(0, 0.37, -0.75);
@@ -43,11 +48,23 @@ public class Bike extends LivingEntity {
 
 	@Override
 	public ItemStack getEquippedStack(EquipmentSlot slot) {
+		if (slot == EquipmentSlot.MAINHAND) {
+			return heldItem;
+		}
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public void equipStack(EquipmentSlot slot, ItemStack stack) {}
+	public void equipStack(EquipmentSlot slot, ItemStack stack) {
+		if (slot == EquipmentSlot.MAINHAND) {
+			heldItem = stack;
+		}
+	}
+
+	@Override
+	public Iterable<ItemStack> getItemsHand() {
+		return heldItem.isEmpty() ? Collections.emptyList() : Collections.singletonList(heldItem);
+	}
 
 	@Override
 	public Arm getMainArm() {
@@ -58,19 +75,35 @@ public class Bike extends LivingEntity {
 	@Override
 	public void readCustomDataFromTag(CompoundTag tag) {
 		lastUsedAge = tag.getInt("LastUsedAge");
+		heldItem = ItemStack.fromTag(tag.getCompound("HeldItem"));
 	}
 
 	@Override
 	public void writeCustomDataToTag(CompoundTag tag) {
 		tag.putInt("LastUsedAge", lastUsedAge);
+		if (!heldItem.isEmpty()) {
+			CompoundTag heldItemTag = new CompoundTag();
+			heldItem.toTag(heldItemTag);
+			tag.put("HeldItem", heldItemTag);
+		}
 	}
+
+	private Text prevCustomName = null;
+	private boolean prevCustomNameVisible = false;
+	private boolean customNameDirty = false;
 
 	@Override
 	public void tick() {
 		super.tick();
 		if (!world.isClient) {
 			if (age - lastUsedAge > ((20 * (5 * 60)) - (20 * 30))) {
-				setCustomName(new TranslatableText("entity.bikeshed.bike.crab"));
+				if (!customNameDirty) {
+					prevCustomName = getCustomName();
+					prevCustomNameVisible = isCustomNameVisible();
+					setCustomName(new TranslatableText("entity.bikeshed.bike.crab"));
+					setCustomNameVisible(true);
+					customNameDirty = true;
+				}
 			}
 			if (age - lastUsedAge > (20 * (5 * 60))) {
 				kill();
@@ -78,12 +111,25 @@ public class Bike extends LivingEntity {
 		}
 	}
 
-	// TODO: some logic to GC unused bikes?
+	private void resetCustomName() {
+		if (customNameDirty) {
+			setCustomName(prevCustomName);
+			setCustomNameVisible(prevCustomNameVisible);
+			customNameDirty = false;
+		}
+	}
+
+	private boolean canBeHeld(Item item) {
+		Identifier ident = Registry.ITEM.getId(item);
+		// TODO: change this, do action when held
+		return ident.toString().contains("bone");
+	}
 
 	@Override
 	public ActionResult interact(PlayerEntity player, Hand hand) {
 		if (isAlive()) {
 			lastUsedAge = age;
+			resetCustomName();
 			if (hasPassengers()) {
 				return ActionResult.PASS;
 			}
@@ -96,14 +142,33 @@ public class Bike extends LivingEntity {
 				}
 			}
 			if (!world.isClient()) {
-				if (Registry.ITEM.getId(itemStack.getItem()).equals(new Identifier("minecraft", "iron_ingot"))) {
-					// TODO: consume item?
-					heal(2f);
-				} else {
-					player.yaw = yaw;
-					player.pitch = pitch;
-					player.startRiding(this);
+				if (!itemStack.isEmpty()) {
+					if (Registry.ITEM.getId(itemStack.getItem()).equals(new Identifier("minecraft", "iron_ingot"))) {
+						// TODO: consume item?
+						heal(2f);
+						((ServerWorld) world).spawnParticles(ParticleTypes.HAPPY_VILLAGER, getX(), getY(), getZ(), 3, 0.5, 0.25, 0.5, 0);
+						return ActionResult.success(false);
+					} else if (canBeHeld(itemStack.getItem()) && heldItem.isEmpty()) {
+						// TODO: consume item?
+						heldItem = itemStack;
+						return ActionResult.success(false);
+					}
 				}
+				// If sneaking, give item to player
+				if (player.isSneaking()) {
+					if (!heldItem.isEmpty()) {
+						// TODO: does this work??
+						if (!player.giveItemStack(heldItem)) {
+							player.dropItem(heldItem, false);
+						}
+						heldItem = ItemStack.EMPTY;
+						return ActionResult.success(false);
+					}
+					return ActionResult.PASS;
+				}
+				player.yaw = yaw;
+				player.pitch = pitch;
+				player.startRiding(this);
 			}
 			return ActionResult.success(world.isClient());
 		}
@@ -119,6 +184,7 @@ public class Bike extends LivingEntity {
 		if (isAlive()) {
 			if (hasPassengers() && getPrimaryPassenger() instanceof LivingEntity) {
 				lastUsedAge = age;
+				resetCustomName();
 				// Update movement and rotation to that of the primary passenger
 				LivingEntity ent = (LivingEntity) getPrimaryPassenger();
 				yaw = ent.yaw;
@@ -163,6 +229,7 @@ public class Bike extends LivingEntity {
 		super.updatePassengerPosition(passenger);
 		if (this.hasPassenger(passenger)) {
 			lastUsedAge = age;
+			resetCustomName();
 			// Translate 0.45 backwards, accounting for yaw
 			double height = getY() + getMountedHeightOffset() + passenger.getHeightOffset();
 			Vec3d backwardsOffset = new Vec3d(0, 0, -0.45).rotateY((float) Math.toRadians(-bodyYaw));
@@ -232,6 +299,7 @@ public class Bike extends LivingEntity {
 	@Override
 	public Vec3d updatePassengerForDismount(LivingEntity passenger) {
 		lastUsedAge = age;
+		resetCustomName();
 		Direction dir = getMovementDirection();
 		if (dir.getAxis() == Direction.Axis.Y) {
 			// If moving vertically, delegate to super

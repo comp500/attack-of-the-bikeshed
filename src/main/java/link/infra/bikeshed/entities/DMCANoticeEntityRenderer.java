@@ -2,7 +2,6 @@ package link.infra.bikeshed.entities;
 
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
 public class DMCANoticeEntityRenderer extends LivingEntityRenderer<DMCANotice, DMCANoticeModel> {
