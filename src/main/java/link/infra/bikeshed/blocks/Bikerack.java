@@ -16,12 +16,15 @@ import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class Bikerack extends Block {
 	public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
@@ -78,7 +81,20 @@ public class Bikerack extends Block {
 	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
 		if (!player.hasVehicle()) {
+			if (player.getEntityWorld().isClient()) {
+				return ActionResult.SUCCESS;
+			}
 			// TODO: survival cost/recipe, and configuration
+			// If there are nearby bikes with no passengers, put the player on one
+			List<Bike> nearbyBikes = world.getEntities(Bike.class, new Box(pos).expand(1), e -> !e.hasPassengers());
+			if (nearbyBikes.size() > 0) {
+				Bike bike = nearbyBikes.get(0);
+				player.yaw = bike.yaw;
+				player.pitch = bike.pitch;
+				player.startRiding(bike);
+				return ActionResult.SUCCESS;
+			}
+
 			Bike bike = new Bike(BikeshedMain.BIKE, world);
 			Vec3d vec = Vec3d.of(pos).add(0.5, 0, 0.5).add(getBikeOffset(state));
 			float yaw = getBikeYaw(state);
