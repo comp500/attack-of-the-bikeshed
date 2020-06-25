@@ -68,7 +68,7 @@ public class BikeshedMain implements ModInitializer {
 				World world = packetContext.getPlayer().getEntityWorld();
 				if (world.isChunkLoaded(new BlockPos(source)) && world.isChunkLoaded(new BlockPos(target))) {
 					Entity hitEntity = world.getEntityById(entityId);
-					if (hitEntity == null) {
+					if (hitEntity == null || hitEntity instanceof DMCANotice) {
 						return;
 					}
 

@@ -50,7 +50,6 @@ public class DMCAWand extends Item {
 	@Override
 	public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
 		if (!(entity instanceof PlayerEntity)) {
-			// TODO: sync?
 			if (user.getEntityWorld().isClient()) {
 				Vec3d target;
 				if (MinecraftClient.getInstance().crosshairTarget != null) {

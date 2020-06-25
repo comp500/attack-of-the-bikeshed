@@ -3,14 +3,14 @@
 	"id": "bikeshed",
 	"version": "${version}",
 
-	"name": "Bike[shed]",
-	"description": "Bikes. With an accompanying shed, of course.",
+	"name": "Attack of the Bikeshed",
+	"description": "We must all fear, for the bikeshed is near.",
 	"authors": [
 		"comp500"
 	],
 	"contact": {
 		"homepage": "yes",
-		"sources": "https://github.com/comp500/Bikeshed"
+		"sources": "https://github.com/comp500/attack-of-the-bikeshed"
 	},
 
 	"license": "LGPL-3.0-or-later",
