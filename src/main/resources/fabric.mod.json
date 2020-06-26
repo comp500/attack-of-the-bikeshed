@@ -9,8 +9,9 @@
 		"comp500"
 	],
 	"contact": {
-		"homepage": "yes",
-		"sources": "https://github.com/comp500/attack-of-the-bikeshed"
+		"homepage": "https://github.com/comp500/attack-of-the-bikeshed",
+		"sources": "https://github.com/comp500/attack-of-the-bikeshed",
+		"issues": "https://github.com/comp500/attack-of-the-bikeshed/issues/"
 	},
 
 	"license": "LGPL-3.0-or-later",
