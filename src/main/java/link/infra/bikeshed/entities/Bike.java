@@ -62,7 +62,7 @@ public class Bike extends LivingEntity {
 	}
 
 	@Override
-	public Iterable<ItemStack> getItemsHand() {
+	public Iterable<ItemStack> getHandItems() {
 		return heldItem.isEmpty() ? Collections.emptyList() : Collections.singletonList(heldItem);
 	}
 
