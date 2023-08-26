@@ -61,7 +61,7 @@ public class DMCANotice extends LivingEntity {
 				return ActionResult.FAIL;
 			}
 			newEnt.readNbt(existingEntityNbt);
-			newEnt.updatePositionAndAngles(getX(), getY(), getZ(), yaw, pitch);
+			newEnt.updatePositionAndAngles(getX(), getY(), getZ(), getYaw(), getPitch());
 			world.spawnEntity(newEnt);
 		}
 		return ActionResult.SUCCESS;

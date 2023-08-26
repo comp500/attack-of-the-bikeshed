@@ -61,7 +61,7 @@ public class DMCAWand extends Item {
 
 				// TODO: wow this looks horribly insecure... I should probably validate this on the server somehow
 				PacketByteBuf data = new PacketByteBuf(Unpooled.buffer());
-				data.writeInt(entity.getEntityId());
+				data.writeInt(entity.getId());
 				data.writeDouble(source.getX());
 				data.writeDouble(source.getY());
 				data.writeDouble(source.getZ());

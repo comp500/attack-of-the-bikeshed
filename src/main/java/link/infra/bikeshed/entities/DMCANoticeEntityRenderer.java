@@ -1,12 +1,12 @@
 package link.infra.bikeshed.entities;
 
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.util.Identifier;
 
 public class DMCANoticeEntityRenderer extends LivingEntityRenderer<DMCANotice, DMCANoticeModel> {
-	public DMCANoticeEntityRenderer(EntityRenderDispatcher dispatcher) {
-		super(dispatcher, new DMCANoticeModel(), 0.0f);
+	public DMCANoticeEntityRenderer(EntityRendererFactory.Context context) {
+		super(context, new DMCANoticeModel(context.getPart(DMCANoticeModel.LAYER)), 0.0f);
 	}
 
 	@Override

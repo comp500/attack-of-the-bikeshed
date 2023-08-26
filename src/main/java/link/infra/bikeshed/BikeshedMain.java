@@ -31,8 +31,10 @@ import net.minecraft.world.World;
 
 public class BikeshedMain implements ModInitializer {
 
+	public static final Identifier BIKE_ID = new Identifier("bikeshed", "bike");
+
 	public static final EntityType<Bike> BIKE = Registry.register(Registry.ENTITY_TYPE,
-		new Identifier("bikeshed", "bike"),
+		BIKE_ID,
 		FabricEntityTypeBuilder.create(SpawnGroup.MISC, Bike::new)
 			.dimensions(EntityDimensions.fixed(0.75f, 1.05f))
 			// TODO: figure out velocity syncing issues
@@ -40,8 +42,10 @@ public class BikeshedMain implements ModInitializer {
 			.forceTrackedVelocityUpdates(true)
 			.build());
 
+	public static final Identifier DMCA_NOTICE_ID = new Identifier("bikeshed", "dmca_notice");
+
 	public static final EntityType<DMCANotice> DMCA_NOTICE = Registry.register(Registry.ENTITY_TYPE,
-		new Identifier("bikeshed", "dmca_notice"),
+		DMCA_NOTICE_ID,
 		FabricEntityTypeBuilder.create(SpawnGroup.MISC, DMCANotice::new)
 			.dimensions(EntityDimensions.fixed(1.5f, 1.7f)).build());
 
@@ -95,7 +99,7 @@ public class BikeshedMain implements ModInitializer {
 					// Spawn the new entity
 					DMCANotice notice = new DMCANotice(DMCA_NOTICE, world);
 					notice.setExistingEntity(nbt, type);
-					notice.updatePositionAndAngles(hitEntity.getX(), hitEntity.getY(), hitEntity.getZ(), hitEntity.yaw, hitEntity.pitch);
+					notice.updatePositionAndAngles(hitEntity.getX(), hitEntity.getY(), hitEntity.getZ(), hitEntity.getYaw(), hitEntity.getYaw());
 					world.spawnEntity(notice);
 				}
 			});

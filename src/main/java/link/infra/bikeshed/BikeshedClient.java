@@ -1,12 +1,15 @@
 package link.infra.bikeshed;
 
 import link.infra.bikeshed.entities.BikeEntityRenderer;
+import link.infra.bikeshed.entities.BikeModel;
 import link.infra.bikeshed.entities.DMCANoticeEntityRenderer;
+import link.infra.bikeshed.entities.DMCANoticeModel;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 
@@ -16,11 +19,11 @@ public class BikeshedClient implements ClientModInitializer {
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onInitializeClient() {
-		EntityRendererRegistry.INSTANCE.register(BikeshedMain.BIKE,
-			(dispatcher, context) -> new BikeEntityRenderer(dispatcher));
+		EntityRendererRegistry.register(BikeshedMain.BIKE, BikeEntityRenderer::new);
+		EntityModelLayerRegistry.registerModelLayer(BikeModel.LAYER, BikeModel::getTexturedModelData);
 
-		EntityRendererRegistry.INSTANCE.register(BikeshedMain.DMCA_NOTICE,
-			(dispatcher, context) -> new DMCANoticeEntityRenderer(dispatcher));
+		EntityRendererRegistry.register(BikeshedMain.DMCA_NOTICE, DMCANoticeEntityRenderer::new);
+		EntityModelLayerRegistry.registerModelLayer(DMCANoticeModel.LAYER, DMCANoticeModel::getTexturedModelData);
 
 		ClientPlayNetworking.registerGlobalReceiver(DMCA_ATTACK_BEAM_PACKET_ID, (client, handler, packetByteBuf, responseSender) -> {
 			Vec3d source = new Vec3d(packetByteBuf.readDouble(), packetByteBuf.readDouble(), packetByteBuf.readDouble());

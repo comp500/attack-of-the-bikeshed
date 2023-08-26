@@ -205,8 +205,8 @@ public class Bike extends LivingEntity {
 					}
 					return ActionResult.PASS;
 				}
-				player.yaw = yaw;
-				player.pitch = pitch;
+				player.setYaw(getYaw());
+				player.setPitch(getPitch());
 				player.startRiding(this);
 			}
 			return ActionResult.success(world.isClient());
@@ -226,11 +226,11 @@ public class Bike extends LivingEntity {
 				resetCustomName();
 				// Update movement and rotation to that of the primary passenger
 				LivingEntity ent = (LivingEntity) getPrimaryPassenger();
-				yaw = ent.yaw;
-				prevYaw = yaw;
-				pitch = ent.pitch * 0.5F;
-				setRotation(yaw, pitch);
-				bodyYaw = yaw;
+				setYaw(ent.getYaw());
+				prevYaw = getYaw();
+				setPitch(ent.getPitch() * 0.5F);
+				setRotation(getYaw(), getPitch());
+				bodyYaw = getYaw();
 				headYaw = bodyYaw;
 				float newSidewaysSpeed = ent.sidewaysSpeed * 0.5F;
 				float newForwardSpeed = ent.forwardSpeed;
@@ -373,7 +373,7 @@ public class Bike extends LivingEntity {
 
 	private void snapToBikeRack() {
 		// Check current block pos
-		BlockState state = getBlockState();
+		BlockState state = getBlockStateAtPos();
 		BlockPos pos = getBlockPos();
 		if (!(state.getBlock() instanceof Bikerack)) {
 			// Check block pos in front

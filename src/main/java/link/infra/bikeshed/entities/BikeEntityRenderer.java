@@ -2,7 +2,7 @@ package link.infra.bikeshed.entities;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
@@ -11,8 +11,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
 
 public class BikeEntityRenderer extends LivingEntityRenderer<Bike, BikeModel> {
-	public BikeEntityRenderer(EntityRenderDispatcher dispatcher) {
-		super(dispatcher, new BikeModel(), 0.0f);
+	public BikeEntityRenderer(EntityRendererFactory.Context context) {
+		super(context, new BikeModel(context.getPart(BikeModel.LAYER)), 0.0f);
 	}
 
 	@Override

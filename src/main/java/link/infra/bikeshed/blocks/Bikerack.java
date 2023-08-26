@@ -89,8 +89,8 @@ public class Bikerack extends Block {
 			List<Bike> nearbyBikes = world.getEntitiesByClass(Bike.class, new Box(pos).expand(1), e -> !e.hasPassengers());
 			if (nearbyBikes.size() > 0) {
 				Bike bike = nearbyBikes.get(0);
-				player.yaw = bike.yaw;
-				player.pitch = bike.pitch;
+				player.setYaw(bike.getYaw());
+				player.setPitch(bike.getPitch());
 				player.startRiding(bike);
 				return ActionResult.SUCCESS;
 			}
