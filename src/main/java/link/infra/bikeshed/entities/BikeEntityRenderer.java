@@ -36,7 +36,7 @@ public class BikeEntityRenderer extends LivingEntityRenderer<Bike, BikeModel> {
 			matrixStack.translate(0.4, 2.65, 0.9);
 			matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-70));
 			// TODO: check transforms
-			MinecraftClient.getInstance().getHeldItemRenderer().renderItem(bike, bike.heldItem, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, true, matrixStack, vertexConsumerProvider, light);
+			MinecraftClient.getInstance().getEntityRenderDispatcher().getHeldItemRenderer().renderItem(bike, bike.heldItem, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, true, matrixStack, vertexConsumerProvider, light);
 			matrixStack.pop();
 		}
 	}

@@ -18,7 +18,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Hand;
@@ -39,7 +38,7 @@ public class DMCAWand extends Item {
 
 	@Override
 	public void appendTooltip(ItemStack stack, World world, List<Text> tooltip, TooltipContext context) {
-		tooltip.add(new TranslatableText("item.bikeshed.dmca_wand.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY));
+		tooltip.add(Text.translatable("item.bikeshed.dmca_wand.tooltip").formatted(Formatting.ITALIC, Formatting.GRAY));
 	}
 
 	@Override

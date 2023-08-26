@@ -12,9 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
@@ -102,7 +100,7 @@ public class Bike extends LivingEntity {
 				if (!customNameDirty) {
 					prevCustomName = getCustomName();
 					prevCustomNameVisible = isCustomNameVisible();
-					setCustomName(new TranslatableText("entity.bikeshed.bike.crab"));
+					setCustomName(Text.translatable("entity.bikeshed.bike.crab"));
 					setCustomNameVisible(true);
 					customNameDirty = true;
 				}
@@ -135,19 +133,19 @@ public class Bike extends LivingEntity {
 		String ident = Registry.ITEM.getId(heldItem.getItem()).toString();
 
 		if (ident.contains("bonecheese") || ident.contains("bone_cheese")) {
-			return new LiteralText(selectRandomOf("b o n e", "bone cheese, with ease"));
+			return Text.literal(selectRandomOf("b o n e", "bone cheese, with ease"));
 		} else if (ident.contains("water_bucket")) {
-			return new LiteralText(selectRandomOf("1000mb", "9223372036854775807/9223372036854775807", "1.0F", "3/3 bottles"));
+			return Text.literal(selectRandomOf("1000mb", "9223372036854775807/9223372036854775807", "1.0F", "3/3 bottles"));
 		} else if (ident.contains("lava_bucket")) {
-			return new LiteralText("Heat: 1000 degrees Kelvinheit");
+			return Text.literal("Heat: 1000 degrees Kelvinheit");
 		} else if (ident.contains("milk_bucket")) {
-			return new LiteralText("milk blocks when??");
+			return Text.literal("milk blocks when??");
 		} else if (ident.contains("pufferfish_bucket")) {
-			return new LiteralText("helo i am puf fish");
+			return Text.literal("helo i am puf fish");
 		} else if (ident.contains("salmon_bucket")) {
-			return new LiteralText("NBT fluids haha yes");
+			return Text.literal("NBT fluids haha yes");
 		} else if (ident.contains("bucket")) {
-			return new LiteralText("fluid api go brrr");
+			return Text.literal("fluid api go brrr");
 		}
 		return null;
 	}
