@@ -8,7 +8,7 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 
 public class BikeEntityRenderer extends LivingEntityRenderer<Bike, BikeModel> {
 	public BikeEntityRenderer(EntityRendererFactory.Context context) {
@@ -31,10 +31,10 @@ public class BikeEntityRenderer extends LivingEntityRenderer<Bike, BikeModel> {
 		super.render(bike, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
 		if (!bike.heldItem.isEmpty()) {
 			matrixStack.push();
-			matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-MathHelper.lerp(tickDelta, bike.prevBodyYaw, bike.bodyYaw)));
+			matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-MathHelper.lerp(tickDelta, bike.prevBodyYaw, bike.bodyYaw)));
 			matrixStack.scale(0.5f, 0.5f, 0.5f);
 			matrixStack.translate(0.4, 2.65, 0.9);
-			matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-70));
+			matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-70));
 			// TODO: check transforms
 			MinecraftClient.getInstance().getEntityRenderDispatcher().getHeldItemRenderer().renderItem(bike, bike.heldItem, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, true, matrixStack, vertexConsumerProvider, light);
 			matrixStack.pop();

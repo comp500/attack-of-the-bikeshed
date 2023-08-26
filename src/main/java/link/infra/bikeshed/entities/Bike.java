@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -21,7 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.Collections;
@@ -120,7 +120,7 @@ public class Bike extends LivingEntity {
 	}
 
 	private boolean canBeHeld(Item item) {
-		String ident = Registry.ITEM.getId(item).toString();
+		String ident = Registries.ITEM.getId(item).toString();
 		return ident.contains("bonecheese") || ident.contains("bone_cheese") || ident.contains("bucket") || ident.contains("tater");
 	}
 
@@ -130,7 +130,7 @@ public class Bike extends LivingEntity {
 	}
 
 	private Text getNameFromItem() {
-		String ident = Registry.ITEM.getId(heldItem.getItem()).toString();
+		String ident = Registries.ITEM.getId(heldItem.getItem()).toString();
 
 		if (ident.contains("bonecheese") || ident.contains("bone_cheese")) {
 			return Text.literal(selectRandomOf("b o n e", "bone cheese, with ease"));
@@ -173,7 +173,7 @@ public class Bike extends LivingEntity {
 			}
 			if (!world.isClient()) {
 				if (!itemStack.isEmpty()) {
-					if (Registry.ITEM.getId(itemStack.getItem()).equals(new Identifier("minecraft", "iron_ingot"))) {
+					if (Registries.ITEM.getId(itemStack.getItem()).equals(new Identifier("minecraft", "iron_ingot"))) {
 						// TODO: consume item?
 						heal(2f);
 						((ServerWorld) world).spawnParticles(ParticleTypes.HAPPY_VILLAGER, getX(), getY(), getZ(), 3, 0.5, 0.25, 0.5, 0);

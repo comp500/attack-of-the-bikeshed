@@ -7,11 +7,11 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.Collections;
@@ -55,7 +55,7 @@ public class DMCANotice extends LivingEntity {
 			kill();
 
 			// Spawn existing entity
-			EntityType<? extends Entity> type = Registry.ENTITY_TYPE.get(existingEntityType);
+			EntityType<? extends Entity> type = Registries.ENTITY_TYPE.get(existingEntityType);
 			Entity newEnt = type.create(world);
 			if (newEnt == null) {
 				return ActionResult.FAIL;
