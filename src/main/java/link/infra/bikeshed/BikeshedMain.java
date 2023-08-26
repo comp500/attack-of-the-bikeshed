@@ -6,11 +6,11 @@ import link.infra.bikeshed.entities.Bike;
 import link.infra.bikeshed.entities.DMCANotice;
 import link.infra.bikeshed.items.DMCAWand;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
-import net.fabricmc.fabric.api.server.PlayerStream;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.entity.Entity;
@@ -20,7 +20,7 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -36,7 +36,9 @@ public class BikeshedMain implements ModInitializer {
 		FabricEntityTypeBuilder.create(SpawnGroup.MISC, Bike::new)
 			.dimensions(EntityDimensions.fixed(0.75f, 1.05f))
 			// TODO: figure out velocity syncing issues
-			.trackable(30, 3, true).build());
+			.trackRangeBlocks(30)
+			.forceTrackedVelocityUpdates(true)
+			.build());
 
 	public static final EntityType<DMCANotice> DMCA_NOTICE = Registry.register(Registry.ENTITY_TYPE,
 		new Identifier("bikeshed", "dmca_notice"),
@@ -58,14 +60,14 @@ public class BikeshedMain implements ModInitializer {
 		Registry.register(Registry.BLOCK, new Identifier("bikeshed", "bikerack"), BIKE_RACK);
 		Registry.register(Registry.ITEM, new Identifier("bikeshed", "bikerack"), new BlockItem(BIKE_RACK, new Item.Settings().group(ItemGroup.TRANSPORTATION)));
 
-		ServerSidePacketRegistry.INSTANCE.register(DMCA_ATTACK_PACKET_ID, (packetContext, packetByteBuf) -> {
+		ServerPlayNetworking.registerGlobalReceiver(DMCA_ATTACK_PACKET_ID, (server, player, handler, packetByteBuf, responseSender) -> {
 			int entityId = packetByteBuf.readInt();
 			Vec3d source = new Vec3d(packetByteBuf.readDouble(), packetByteBuf.readDouble(), packetByteBuf.readDouble());
 			Vec3d target = new Vec3d(packetByteBuf.readDouble(), packetByteBuf.readDouble(), packetByteBuf.readDouble());
 			// TODO: check the player has a DMCA wand?
 
-			packetContext.getTaskQueue().execute(() -> {
-				World world = packetContext.getPlayer().getEntityWorld();
+			server.execute(() -> {
+				World world = player.getEntityWorld();
 				if (world.isChunkLoaded(new BlockPos(source)) && world.isChunkLoaded(new BlockPos(target))) {
 					Entity hitEntity = world.getEntityById(entityId);
 					if (hitEntity == null || hitEntity instanceof DMCANotice) {
@@ -80,11 +82,11 @@ public class BikeshedMain implements ModInitializer {
 					beamPacket.writeDouble(target.getY());
 					beamPacket.writeDouble(target.getZ());
 
-					PlayerStream.watching(hitEntity).forEach(player ->
-						ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, DMCA_ATTACK_BEAM_PACKET_ID, beamPacket));
+					PlayerLookup.tracking(hitEntity).forEach(playerx ->
+						ServerPlayNetworking.send(playerx, DMCA_ATTACK_BEAM_PACKET_ID, beamPacket));
 
-					CompoundTag tag = new CompoundTag();
-					hitEntity.toTag(tag);
+					NbtCompound nbt = new NbtCompound();
+					hitEntity.writeNbt(nbt);
 					Identifier type = Registry.ENTITY_TYPE.getId(hitEntity.getType());
 
 					// Kill the hit entity
@@ -92,7 +94,7 @@ public class BikeshedMain implements ModInitializer {
 
 					// Spawn the new entity
 					DMCANotice notice = new DMCANotice(DMCA_NOTICE, world);
-					notice.setExistingEntity(tag, type);
+					notice.setExistingEntity(nbt, type);
 					notice.updatePositionAndAngles(hitEntity.getX(), hitEntity.getY(), hitEntity.getZ(), hitEntity.yaw, hitEntity.pitch);
 					world.spawnEntity(notice);
 				}

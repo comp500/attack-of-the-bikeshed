@@ -9,7 +9,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.LiteralText;
@@ -75,18 +75,18 @@ public class Bike extends LivingEntity {
 	}
 
 	@Override
-	public void readCustomDataFromTag(CompoundTag tag) {
-		lastUsedAge = tag.getInt("LastUsedAge");
-		heldItem = ItemStack.fromTag(tag.getCompound("HeldItem"));
+	public void readCustomDataFromNbt(NbtCompound nbt) {
+		lastUsedAge = nbt.getInt("LastUsedAge");
+		heldItem = ItemStack.fromNbt(nbt.getCompound("HeldItem"));
 	}
 
 	@Override
-	public void writeCustomDataToTag(CompoundTag tag) {
-		tag.putInt("LastUsedAge", lastUsedAge);
+	public void writeCustomDataToNbt(NbtCompound nbt) {
+		nbt.putInt("LastUsedAge", lastUsedAge);
 		if (!heldItem.isEmpty()) {
-			CompoundTag heldItemTag = new CompoundTag();
-			heldItem.toTag(heldItemTag);
-			tag.put("HeldItem", heldItemTag);
+			NbtCompound heldItemNbt = new NbtCompound();
+			heldItem.writeNbt(heldItemNbt);
+			nbt.put("HeldItem", heldItemNbt);
 		}
 	}
 
@@ -272,7 +272,7 @@ public class Bike extends LivingEntity {
 			// Translate 0.45 backwards, accounting for yaw
 			double height = getY() + getMountedHeightOffset() + passenger.getHeightOffset();
 			Vec3d backwardsOffset = new Vec3d(0, 0, -0.45).rotateY((float) Math.toRadians(-bodyYaw));
-			passenger.updatePosition(getX() + backwardsOffset.getX(), height, getZ() + backwardsOffset.getZ());
+			passenger.setPosition(getX() + backwardsOffset.getX(), height, getZ() + backwardsOffset.getZ());
 		}
 	}
 
@@ -354,7 +354,7 @@ public class Bike extends LivingEntity {
 				Box passengerBounds = passenger.getBoundingBox(pose);
 				for (int[] offset : offsets) {
 					targetBlockPos.set(currBlockPos.getX() + offset[0], currBlockPos.getY(), currBlockPos.getZ() + offset[1]);
-					double height = world.getCollisionHeightAt(targetBlockPos);
+					double height = world.getDismountHeight(targetBlockPos);
 					if (Dismounting.canDismountInBlock(height)) {
 						Vec3d newPos = Vec3d.ofCenter(targetBlockPos, height);
 						if (Dismounting.canPlaceEntityAt(world, passenger, passengerBounds.offset(newPos))) {
@@ -387,7 +387,7 @@ public class Bike extends LivingEntity {
 			float yaw = bikerack.getBikeYaw(state);
 			refreshPositionAndAngles(vec.getX(), vec.getY(), vec.getZ(), yaw, 0);
 			setHeadYaw(yaw);
-			setYaw(yaw);
+			setBodyYaw(yaw);
 		}
 	}
 }

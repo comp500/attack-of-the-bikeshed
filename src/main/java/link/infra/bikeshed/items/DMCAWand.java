@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import io.netty.buffer.Unpooled;
 import link.infra.bikeshed.BikeshedMain;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.EquipmentSlot;
@@ -69,7 +69,7 @@ public class DMCAWand extends Item {
 				data.writeDouble(target.getY());
 				data.writeDouble(target.getZ());
 
-				ClientSidePacketRegistry.INSTANCE.sendToServer(BikeshedMain.DMCA_ATTACK_PACKET_ID, data);
+				ClientPlayNetworking.send(BikeshedMain.DMCA_ATTACK_PACKET_ID, data);
 			}
 			return ActionResult.SUCCESS;
 		}

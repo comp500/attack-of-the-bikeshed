@@ -86,7 +86,7 @@ public class Bikerack extends Block {
 			}
 			// TODO: survival cost/recipe, and configuration
 			// If there are nearby bikes with no passengers, put the player on one
-			List<Bike> nearbyBikes = world.getEntities(Bike.class, new Box(pos).expand(1), e -> !e.hasPassengers());
+			List<Bike> nearbyBikes = world.getEntitiesByClass(Bike.class, new Box(pos).expand(1), e -> !e.hasPassengers());
 			if (nearbyBikes.size() > 0) {
 				Bike bike = nearbyBikes.get(0);
 				player.yaw = bike.yaw;
@@ -100,7 +100,7 @@ public class Bikerack extends Block {
 			float yaw = getBikeYaw(state);
 			bike.updatePositionAndAngles(vec.getX(), vec.getY(), vec.getZ(), yaw, 0);
 			bike.setHeadYaw(yaw);
-			bike.setYaw(yaw);
+			bike.setBodyYaw(yaw);
 			world.spawnEntity(bike);
 			return ActionResult.SUCCESS;
 		}

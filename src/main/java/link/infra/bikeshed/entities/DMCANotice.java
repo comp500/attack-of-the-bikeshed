@@ -6,7 +6,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
@@ -18,15 +18,15 @@ import java.util.Collections;
 
 @SuppressWarnings("EntityConstructor") // Stupid mcdev
 public class DMCANotice extends LivingEntity {
-	private CompoundTag existingEntityTag = null;
+	private NbtCompound existingEntityNbt = null;
 	private Identifier existingEntityType = null;
 
 	public DMCANotice(EntityType<? extends LivingEntity> entityType, World world) {
 		super(entityType, world);
 	}
 
-	public void setExistingEntity(CompoundTag tag, Identifier entityType) {
-		existingEntityTag = tag;
+	public void setExistingEntity(NbtCompound nbt, Identifier entityType) {
+		existingEntityNbt = nbt;
 		existingEntityType = entityType;
 	}
 
@@ -50,7 +50,7 @@ public class DMCANotice extends LivingEntity {
 
 	@Override
 	public ActionResult interact(PlayerEntity player, Hand hand) {
-		if (!player.getEntityWorld().isClient && existingEntityTag != null) {
+		if (!player.getEntityWorld().isClient && existingEntityNbt != null) {
 			// Kill DMCA notice
 			kill();
 
@@ -60,7 +60,7 @@ public class DMCANotice extends LivingEntity {
 			if (newEnt == null) {
 				return ActionResult.FAIL;
 			}
-			newEnt.fromTag(existingEntityTag);
+			newEnt.readNbt(existingEntityNbt);
 			newEnt.updatePositionAndAngles(getX(), getY(), getZ(), yaw, pitch);
 			world.spawnEntity(newEnt);
 		}
@@ -68,17 +68,17 @@ public class DMCANotice extends LivingEntity {
 	}
 
 	@Override
-	public void writeCustomDataToTag(CompoundTag tag) {
-		if (existingEntityTag != null) {
-			tag.put("ExistingEntity", existingEntityTag);
+	public void writeCustomDataToNbt(NbtCompound nbt) {
+		if (existingEntityNbt != null) {
+			nbt.put("ExistingEntity", existingEntityNbt);
 			// TODO: should this use raw IDs?
-			tag.putString("ExistingEntityType", existingEntityType.toString());
+			nbt.putString("ExistingEntityType", existingEntityType.toString());
 		}
 	}
 
 	@Override
-	public void readCustomDataFromTag(CompoundTag tag) {
-		existingEntityTag = tag.getCompound("ExistingEntity");
-		existingEntityType = new Identifier(tag.getString("ExistingEntityType"));
+	public void readCustomDataFromNbt(NbtCompound nbt) {
+		existingEntityNbt = nbt.getCompound("ExistingEntity");
+		existingEntityType = new Identifier(nbt.getString("ExistingEntityType"));
 	}
 }
