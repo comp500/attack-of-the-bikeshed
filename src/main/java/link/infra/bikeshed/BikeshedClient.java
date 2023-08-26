@@ -10,12 +10,17 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.block.Blocks;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.math.Vec3d;
 
 import static link.infra.bikeshed.BikeshedMain.DMCA_ATTACK_BEAM_PACKET_ID;
 
 public class BikeshedClient implements ClientModInitializer {
+	private static final ParticleEffect BARRIER_PARTICLE = new BlockStateParticleEffect(ParticleTypes.BLOCK_MARKER, Blocks.BARRIER.getDefaultState());
+
 	@Environment(EnvType.CLIENT)
 	@Override
 	public void onInitializeClient() {
@@ -34,7 +39,7 @@ public class BikeshedClient implements ClientModInitializer {
 				Vec3d normal = ray.normalize();
 				for (double i = 1.5; i < length; i += 1) {
 					Vec3d currentPos = source.add(normal.multiply(i));
-					handler.getWorld().addParticle(ParticleTypes.BARRIER, currentPos.getX(), currentPos.getY(), currentPos.getZ(), 0, 0, 0);
+					handler.getWorld().addParticle(BARRIER_PARTICLE, currentPos.getX(), currentPos.getY(), currentPos.getZ(), 0, 0, 0);
 				}
 				handler.getWorld().addParticle(ParticleTypes.EXPLOSION, target.getX(), target.getY(), target.getZ(), 0, 0, 0);
 			});
