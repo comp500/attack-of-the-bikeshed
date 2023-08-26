@@ -13,7 +13,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.MapColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -53,7 +53,7 @@ public class BikeshedMain implements ModInitializer {
 			.dimensions(EntityDimensions.fixed(1.5f, 1.7f)).build());
 
 	public static final Item DMCA_WAND = new DMCAWand(new Item.Settings());
-	public static final Block BIKE_RACK = new Bikerack(FabricBlockSettings.of(Material.METAL).hardness(4.0f));
+	public static final Block BIKE_RACK = new Bikerack(FabricBlockSettings.create().mapColor(MapColor.IRON_GRAY).hardness(4.0f));
 
 	public static final Identifier DMCA_ATTACK_PACKET_ID = new Identifier("bikeshed", "dmca_attack");
 	public static final Identifier DMCA_ATTACK_BEAM_PACKET_ID = new Identifier("bikeshed", "dmca_attack_beam");

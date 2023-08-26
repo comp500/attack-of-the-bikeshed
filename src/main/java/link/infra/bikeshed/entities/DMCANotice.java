@@ -56,13 +56,13 @@ public class DMCANotice extends LivingEntity {
 
 			// Spawn existing entity
 			EntityType<? extends Entity> type = Registries.ENTITY_TYPE.get(existingEntityType);
-			Entity newEnt = type.create(world);
+			Entity newEnt = type.create(getWorld());
 			if (newEnt == null) {
 				return ActionResult.FAIL;
 			}
 			newEnt.readNbt(existingEntityNbt);
 			newEnt.updatePositionAndAngles(getX(), getY(), getZ(), getYaw(), getPitch());
-			world.spawnEntity(newEnt);
+			getWorld().spawnEntity(newEnt);
 		}
 		return ActionResult.SUCCESS;
 	}

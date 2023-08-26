@@ -95,7 +95,7 @@ public class Bike extends LivingEntity {
 	@Override
 	public void tick() {
 		super.tick();
-		if (!world.isClient) {
+		if (!getWorld().isClient) {
 			if (age - lastUsedAge > ((20 * (5 * 60)) - (20 * 30))) {
 				if (!customNameDirty) {
 					prevCustomName = getCustomName();
@@ -171,12 +171,12 @@ public class Bike extends LivingEntity {
 					return actionResult;
 				}
 			}
-			if (!world.isClient()) {
+			if (!getWorld().isClient()) {
 				if (!itemStack.isEmpty()) {
 					if (Registries.ITEM.getId(itemStack.getItem()).equals(new Identifier("minecraft", "iron_ingot"))) {
 						// TODO: consume item?
 						heal(2f);
-						((ServerWorld) world).spawnParticles(ParticleTypes.HAPPY_VILLAGER, getX(), getY(), getZ(), 3, 0.5, 0.25, 0.5, 0);
+						((ServerWorld) getWorld()).spawnParticles(ParticleTypes.HAPPY_VILLAGER, getX(), getY(), getZ(), 3, 0.5, 0.25, 0.5, 0);
 						return ActionResult.success(false);
 					} else if (canBeHeld(itemStack.getItem()) && heldItem.isEmpty()) {
 						// TODO: consume item?
@@ -191,9 +191,9 @@ public class Bike extends LivingEntity {
 				// If sneaking, give item to player
 				if (player.isSneaking()) {
 					if (!heldItem.isEmpty()) {
-						ItemEntity itemEntity = new ItemEntity(world, getX(), getY(), getZ(), heldItem);
+						ItemEntity itemEntity = new ItemEntity(getWorld(), getX(), getY(), getZ(), heldItem);
 						itemEntity.setPickupDelay(0);
-						world.spawnEntity(itemEntity);
+						getWorld().spawnEntity(itemEntity);
 						heldItem = ItemStack.EMPTY;
 						if (!customNameDirty) {
 							setCustomName(null);
@@ -207,7 +207,7 @@ public class Bike extends LivingEntity {
 				player.setPitch(getPitch());
 				player.startRiding(this);
 			}
-			return ActionResult.success(world.isClient());
+			return ActionResult.success(getWorld().isClient());
 		}
 		return ActionResult.PASS;
 	}
@@ -269,15 +269,15 @@ public class Bike extends LivingEntity {
 	}
 
 	@Override
-	public void updatePassengerPosition(Entity passenger) {
-		super.updatePassengerPosition(passenger);
+	public void updatePassengerPosition(Entity passenger, Entity.PositionUpdater positionUpdater) {
+		super.updatePassengerPosition(passenger, positionUpdater);
 		if (this.hasPassenger(passenger)) {
 			lastUsedAge = age;
 			resetCustomName();
 			// Translate 0.45 backwards, accounting for yaw
 			double height = getY() + getMountedHeightOffset() + passenger.getHeightOffset();
 			Vec3d backwardsOffset = new Vec3d(0, 0, -0.45).rotateY((float) Math.toRadians(-bodyYaw));
-			passenger.setPosition(getX() + backwardsOffset.getX(), height, getZ() + backwardsOffset.getZ());
+			positionUpdater.accept(passenger, getX() + backwardsOffset.getX(), height, getZ() + backwardsOffset.getZ());
 		}
 	}
 
@@ -359,10 +359,10 @@ public class Bike extends LivingEntity {
 				Box passengerBounds = passenger.getBoundingBox(pose);
 				for (int[] offset : offsets) {
 					targetBlockPos.set(currBlockPos.getX() + offset[0], currBlockPos.getY(), currBlockPos.getZ() + offset[1]);
-					double height = world.getDismountHeight(targetBlockPos);
+					double height = getWorld().getDismountHeight(targetBlockPos);
 					if (Dismounting.canDismountInBlock(height)) {
 						Vec3d newPos = Vec3d.ofCenter(targetBlockPos, height);
-						if (Dismounting.canPlaceEntityAt(world, passenger, passengerBounds.offset(newPos))) {
+						if (Dismounting.canPlaceEntityAt(getWorld(), passenger, passengerBounds.offset(newPos))) {
 							passenger.setPose(pose);
 							snapToBikeRack();
 							return newPos;
@@ -383,7 +383,7 @@ public class Bike extends LivingEntity {
 		if (!(state.getBlock() instanceof Bikerack)) {
 			// Check block pos in front
 			pos = getBlockPos().offset(getMovementDirection());
-			state = world.getBlockState(pos);
+			state = getWorld().getBlockState(pos);
 		}
 
 		if (state.getBlock() instanceof Bikerack) {
