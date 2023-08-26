@@ -38,7 +38,7 @@ public class Bike extends LivingEntity {
 
 	public Bike(EntityType<? extends LivingEntity> entityType, World world) {
 		super(entityType, world);
-		this.stepHeight = 1.0F;
+		this.setStepHeight(1.0F);
 	}
 
 	@Override
@@ -219,11 +219,11 @@ public class Bike extends LivingEntity {
 	@Override
 	public void travel(Vec3d movementInput) {
 		if (isAlive()) {
-			if (hasPassengers() && getPrimaryPassenger() instanceof LivingEntity) {
+			if (getControllingPassenger() != null) {
 				lastUsedAge = age;
 				resetCustomName();
-				// Update movement and rotation to that of the primary passenger
-				LivingEntity ent = (LivingEntity) getPrimaryPassenger();
+				// Update movement and rotation to that of the controlling passenger
+				LivingEntity ent = getControllingPassenger();
 				setYaw(ent.getYaw());
 				prevYaw = getYaw();
 				setPitch(ent.getPitch() * 0.5F);
@@ -237,7 +237,6 @@ public class Bike extends LivingEntity {
 					newForwardSpeed *= 0.25F;
 				}
 
-				this.airStrafingSpeed = this.getMovementSpeed() * 0.1F;
 				if (this.isLogicalSideForUpdatingMovement()) {
 					this.setMovementSpeed((float) this.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED));
 					super.travel(new Vec3d(newSidewaysSpeed, movementInput.y, newForwardSpeed));
@@ -251,8 +250,16 @@ public class Bike extends LivingEntity {
 	}
 
 	@Override
-	public Entity getPrimaryPassenger() {
-		return hasPassengers() ? getPassengerList().get(0) : null;
+	public LivingEntity getControllingPassenger() {
+		if (hasPassengers()) {
+			Entity entity = getPassengerList().get(0);
+			
+			if (entity instanceof LivingEntity) {
+				return (LivingEntity) entity;
+			}
+		}
+
+		return null;
 	}
 
 	@Override

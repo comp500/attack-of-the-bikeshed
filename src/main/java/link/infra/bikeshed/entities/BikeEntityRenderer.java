@@ -4,7 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -36,7 +36,7 @@ public class BikeEntityRenderer extends LivingEntityRenderer<Bike, BikeModel> {
 			matrixStack.translate(0.4, 2.65, 0.9);
 			matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-70));
 			// TODO: check transforms
-			MinecraftClient.getInstance().getEntityRenderDispatcher().getHeldItemRenderer().renderItem(bike, bike.heldItem, ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, true, matrixStack, vertexConsumerProvider, light);
+			MinecraftClient.getInstance().getEntityRenderDispatcher().getHeldItemRenderer().renderItem(bike, bike.heldItem, ModelTransformationMode.THIRD_PERSON_LEFT_HAND, true, matrixStack, vertexConsumerProvider, light);
 			matrixStack.pop();
 		}
 	}
